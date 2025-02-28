@@ -22,11 +22,9 @@ end
 
 def most_active_date(dates)
     dates_str = dates.map do |date|
-        date = date.to_s
-        Date.parse(date).to_s
+        Date.strptime(date, '%m/%d/%y').to_s
     end
-    dates_str
-    #dates.group_by(&:itself).values.max_by(&:size).first
+    dates_str.group_by(&:itself).values.max_by(&:size).first
 end
 
 def legislators_by_zipcode(zipcode)
@@ -83,8 +81,8 @@ contents.each do |row|
 end
 
 # a = ['11/12/08 10:47', '11/12/08 13:23', '11/12/08 13:30']
-# # a.map do |bs|
-# #     p Date.parse(bs).to_s
-# # end
+# a.map do |bs|
+#     p Date.parse(bs).to_s
+# end
 
 p most_active_date(reg_dates)
