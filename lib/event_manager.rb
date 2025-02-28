@@ -19,6 +19,10 @@ def clean_phone_number(phone_number)
     end
 end
 
+def most_active_date
+  
+end
+
 def legislators_by_zipcode(zipcode)
     civic_info = Google::Apis::CivicinfoV2::CivicInfoService.new
     civic_info.key = 'AIzaSyClRzDqDh5MsXwnCWi0kOiiBivP6JsSyBw'
