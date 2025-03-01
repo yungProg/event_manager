@@ -1,7 +1,7 @@
 require 'csv'
 require 'google/apis/civicinfo_v2'
 require 'erb'
-require 'date'
+require 'time'
 
 def clean_zipcode(zipcode)
     zipcode.to_s.rjust(5, '0')[0..4]
@@ -20,11 +20,11 @@ def clean_phone_number(phone_number)
     end
 end
 
-def most_active_date(dates)
-    dates_str = dates.map do |date|
-        Date.strptime(date, '%m/%d/%y').to_s
+def peak_hour(dates)
+    hours_str = dates.map do |date|
+        Time.strptime(date, '%m/%d/%y %H:%M').hour.to_s
     end
-    dates_str.group_by(&:itself).values.max_by(&:size).first
+    hours_str.group_by(&:itself).values.max_by(&:size).first
 end
 
 def legislators_by_zipcode(zipcode)
@@ -85,4 +85,4 @@ end
 #     p Date.parse(bs).to_s
 # end
 
-p most_active_date(reg_dates)
+p peak_hour(reg_dates)
