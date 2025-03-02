@@ -3,22 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration hours</title>
+    <title>Active days</title>
 </head>
 <body>
-    <h1>Registration hours</h1>
+    <h1>Active days</h1>
 
     <table>
         <tr>
-            <th>Time</th>
+            <th>Day</th>
             <th>Number of registration</th>
         </tr>
-        <% if hours_arr.kind_of?(Array) %>
-            <% hours_arr.each do |hour_arr| %>
+
+        <% if days_arr.kind_of?(Array)%>
+            <% days_arr.each do |day_arr|%>
+
                 <tr>
-                    <td><%= hour_arr.first%></td>
-                    <td><%= hour_arr.length%></td>
+                    <td><%= day_arr.first %></td>
+                    <td><%= day_arr.length %></td>
                 </tr>
+
             <%end%>
         <%end%>
     </table>

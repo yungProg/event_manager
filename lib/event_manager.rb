@@ -2,6 +2,7 @@ require 'csv'
 require 'google/apis/civicinfo_v2'
 require 'erb'
 require 'time'
+require 'date'
 
 def clean_zipcode(zipcode)
     zipcode.to_s.rjust(5, '0')[0..4]
@@ -20,17 +21,31 @@ def clean_phone_number(phone_number)
     end
 end
 
-def peak_hour(dates)
-    hours_str = dates.map do |date|
+def peak_hours(dates)
+    hours_arr = dates.map do |date|
         Time.strptime(date, '%m/%d/%y %H:%M').hour.to_s + ':00'
     end
-    hours_str = hours_str.group_by(&:itself).values
+    hours_arr = hours_arr.group_by(&:itself).values
     hours_template = File.read('registration_hours.erb')
     erb_hours_template = ERB.new hours_template
     tem = erb_hours_template.result(binding)
     File.open('peak_hours.html', 'w') do |file|
       file.puts tem
     end
+end
+
+def active_days(dates)
+  days_arr = dates.map do |date|
+    formatted_date = Time.strptime(date, '%m/%d/%y').to_s
+    Time.new(formatted_date).strftime('%A')
+  end
+  days_arr = days_arr.group_by(&:itself).values
+  days_template = File.read('registration_days.erb')
+  erb_days_template = ERB.new days_template
+  tem = erb_days_template.result(binding)
+  File.open('active_days.html', 'w') do |file|
+    file.puts tem
+  end
 end
 
 def legislators_by_zipcode(zipcode)
@@ -88,8 +103,5 @@ contents.each do |row|
     save_thank_you_letter(id,form_letter)
 end
 
-# a = ['11/12/08 10:47', '11/12/08 13:23', '11/12/08 13:30']
-# a.map do |bs|
-#     p Date.parse(bs).to_s
-# end
-peak_hour(reg_dates)
+peak_hours(reg_dates)
+active_days(reg_dates)
