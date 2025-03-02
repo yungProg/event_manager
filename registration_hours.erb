@@ -13,10 +13,14 @@
             <th>Time</th>
             <th>Number of registration</th>
         </tr>
-        <tr>
-            <td>13:00</td>
-            <td>25</td>
-        </tr>
+        <% if hours_str.kind_of?(Array) %>
+            <% hours_str.each do |hour_str| %>
+                <tr>
+                    <td><%= hour_str.first%></td>
+                    <td><%= hour_str.length%></td>
+                </tr>
+            <%end%>
+        <%end%>
     </table>
 </body>
 </html>

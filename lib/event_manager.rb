@@ -22,9 +22,15 @@ end
 
 def peak_hour(dates)
     hours_str = dates.map do |date|
-        Time.strptime(date, '%m/%d/%y %H:%M').hour.to_s
+        Time.strptime(date, '%m/%d/%y %H:%M').hour.to_s + ':00'
     end
-    hours_str.group_by(&:itself).values.max_by(&:size).first
+    hours_str = hours_str.group_by(&:itself).values
+    hours_template = File.read('registration_hours.erb')
+    erb_hours_template = ERB.new hours_template
+    tem = erb_hours_template.result(binding)
+    File.open('peak_hours.html', 'w') do |file|
+      file.puts tem
+    end
 end
 
 def legislators_by_zipcode(zipcode)
@@ -64,6 +70,8 @@ template_letter = File.read('form_letter.erb')
 erb_template = ERB.new template_letter
 reg_dates = []
 
+
+
 contents.each do |row|
     id = row[0]
     name = row[:first_name]
@@ -84,5 +92,4 @@ end
 # a.map do |bs|
 #     p Date.parse(bs).to_s
 # end
-
-p peak_hour(reg_dates)
+peak_hour(reg_dates)
