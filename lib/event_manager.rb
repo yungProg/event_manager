@@ -25,6 +25,7 @@ def peak_hours(dates)
     hours_arr = dates.map do |date|
         Time.strptime(date, '%m/%d/%y %H:%M').hour.to_s + ':00'
     end
+    hours_arr.sort!
     hours_arr = hours_arr.group_by(&:itself).values
     hours_template = File.read('registration_hours.erb')
     erb_hours_template = ERB.new hours_template
@@ -35,17 +36,19 @@ def peak_hours(dates)
 end
 
 def active_days(dates)
-  days_arr = dates.map do |date|
-    formatted_date = Time.strptime(date, '%m/%d/%y').to_s
-    Time.new(formatted_date).strftime('%A')
-  end
-  days_arr = days_arr.group_by(&:itself).values
-  days_template = File.read('registration_days.erb')
-  erb_days_template = ERB.new days_template
-  tem = erb_days_template.result(binding)
-  File.open('active_days.html', 'w') do |file|
-    file.puts tem
-  end
+    days_of_week = %[Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday]
+    days_arr = dates.map do |date|
+        formatted_date = Time.strptime(date, '%m/%d/%y').to_s
+        Time.new(formatted_date).strftime('%A')
+    end
+    days_arr = days_arr.group_by(&:itself).values
+    days_arr.sort_by! {|day| days_of_week.index(day.first)}
+    days_template = File.read('registration_days.erb')
+    erb_days_template = ERB.new days_template
+    tem = erb_days_template.result(binding)
+    File.open('active_days.html', 'w') do |file|
+        file.puts tem
+    end
 end
 
 def legislators_by_zipcode(zipcode)
